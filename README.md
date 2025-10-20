@@ -3,7 +3,7 @@
 This repository contains the materials for a CHTC tutorial.
 
 * The [main branch](https://github.com/CHTC/tutorial-containers/tree/main) is for a general audience.
-* The [HISTORY.md file](history.md) contains a list of the other versions of this material.
+* The [HISTORY.md file](HISTORY.md) contains a list of the other versions of this material.
 
 You are currently viewing the `main` branch.
 
