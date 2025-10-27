@@ -1,9 +1,12 @@
-# CHTC Container Training
+# CHTC Tutorial: Containers
 
-The files in this repository are for the CHTC Container Training.
-Corresponding slides:
+This repository contains the materials for a CHTC tutorial.
 
-* [Feb. 11, 2025](https://docs.google.com/presentation/d/10CD4K_xGjFKkOYV-AA0NPOpMPCNusg77-lk1UgUY57g/edit?usp=sharing)
+* The [main branch](https://github.com/CHTC/tutorial-containers/tree/main) is for a general audience.
+* The [HISTORY.md file](https://github.com/CHTC/tutorial-containers/blob/main/HISTORY.md) contains a list of the other versions of this material.
+
+You are currently viewing the `nov2025` branch for the training to be given on Nov. 5, 2025.
+Corresponding slides will be available soon.
 
 ## Files
 
