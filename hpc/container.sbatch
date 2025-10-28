@@ -18,7 +18,7 @@ srun apptainer exec \
     --bind /scratch/$USER \
     --bind $TMPDIR \
     ${container_image} \
-    ./version.sh python3
+    ../version.sh python3
 
 rm -rf $TMPDIR
 

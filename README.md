@@ -32,21 +32,46 @@ of the system being used.
 
 ### Files for the HTC system
 
-If using the HTC system, in addition to the `version.sh` script,
-you will be using the files ending in `.sub`. The `logs` directory 
-is also provided for convience. 
+If using the HTC system, use the files in the `htc` directory:
+
+```
+$ tree htc/
+htc/
+├── container.sub
+├── interactive.sub
+├── logs/
+└── regular.sub
+
+1 directory, 3 files
+```
+
+The `logs` directory is deliberately empty.
 
 ### Files for the HPC system
 
-If using the HPC system, in addition to the `version.sh` script,
-you will be using the files ending in `.sbatch`.
+If using the HPC system, use the files in the `hpc` directory:
+
+```
+$ tree hpc/
+hpc/
+├── container.sbatch
+├── interactive.sh
+└── regular.sbatch
+
+0 directories, 3 files
+```
 
 ## Instructions
 
 All participants should follow these instructions, but use the
 command(s) for their system when noted.
+
 These instructions assume that you already have access to one of the
 systems. 
+You can [request a CHTC account here](https://chtc.cs.wisc.edu/uw-research-computing/form)
+to get access to one of these systems.
+Note that it can take 1-3 business days to get an account,
+assuming that your research group is already using CHTC.
 
 ### Quickstart demo
 
@@ -63,10 +88,22 @@ guide.
 Once logged in, run the following command to clone this repository:
 
 ```
-git clone https://github.com/aowen-uwmad/chtc-containers-training.git
+git clone https://github.com/CHTC/tutorial-containers.git
 ```
 
-Move into the directory that was downloaded.
+Move into the directory appropriate for your system:
+
+**HTC**
+
+```
+cd tutorial-containers/htc/
+```
+
+**HPC**
+
+```
+cd tutorial-containers/hpc/
+```
 
 ### Submit regular job
 
@@ -107,11 +144,11 @@ Once completed, examine the contents of `regular.out`.
 
 ### Submit container job
 
-You will follow a similar process now to submit a container job.
+You will now follow a similar process to submit a job that uses a container.
 For this job, you'll be using the `container` file for your system 
 (`.sub` for HTC, `.sbatch` for HPC).
 
-Compare the contents of the `regular` and `container` job file.
+Compare the contents of the `regular` and `container` job files.
 What has changed?
 
 If you added other commands as arguments besides `python3` to the `regular` file,
@@ -164,6 +201,14 @@ condor_submit -i interactive.sub
 srun --mpi=pmix -n4 -N1 -t 240 -p int --pty bash
 ```
 
+> *HPC ONLY*: You can use the provided `interactive.sh` script to start the
+> interactive session. Using this script may be more convenient than remembering
+> the above command.
+> 
+> ```
+> ./interactive.sh
+> ```
+
 Once the interactive session has started, create a file called
 `container.def` with the following contents:
 
@@ -183,7 +228,7 @@ construct the container.
 
 * The lines under the `%post` section are the commands that 
   Apptainer should use to install additional software, in this case
-  the `cowsay` package that can be used to print messages using ASCII art.
+  the `cowsay` package.
   (This section takes normal shell commands as instructions.)
 
 Now, still in the interactive job, run the following command:
@@ -201,12 +246,14 @@ apptainer build container.sif container.def
 
 As the command runs, you'll see a variety of information printed to the screen.
 
-> First will be information about Apptainer downloading the Docker container 
-> from DockerHub.
-> Next, there will be the usual `pip install` output for installing the `cowsay` package,
-> which comes from Apptainer executing the commands in the `%post` section.
-> Finally, assuming no errors, Apptainer will create a single standalone file
-> (the `.sif` file).
+1. First will be information about Apptainer downloading the Docker container 
+   from DockerHub.
+
+2. Next, there will be the usual `pip install` output for installing the `cowsay` package,
+   which comes from Apptainer executing the commands in the `%post` section.
+
+3. Finally, assuming no errors, Apptainer will create a single standalone file
+   (the `.sif` file).
 
 If everything works correctly, once the command completes there should be a new
 `container.sif` file in your current directory.

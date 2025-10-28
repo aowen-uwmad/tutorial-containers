@@ -2,7 +2,7 @@ log = logs/interactive.$(Cluster).log
 
 should_transfer_files = YES
 
-executable = version.sh
+executable = ../version.sh
 output = interactive.out
 error = interactive.err
 

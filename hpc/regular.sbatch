@@ -8,5 +8,5 @@
 #SBATCH --error=regular.err
 #SBATCH --output=regular.out
 
-srun ./version.sh python3
+srun ../version.sh python3
 
