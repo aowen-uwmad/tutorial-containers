@@ -273,8 +273,16 @@ software that is inside of the container image.
 
 You should be able to run the following command:
 
+**HTC**
+
 ```
 ./version.sh python3
+```
+
+**HPC**
+
+```
+../version.sh python3
 ```
 
 To test that the `cowsay` package is installed, run the following command:
@@ -298,10 +306,18 @@ You should see the following message:
                              ||     ||
 ```
 
+When you are done testing the container, exit the container shell by entering
+
+```bash
+exit
+```
+
+The `Apptainer> ` prompt should disappear.
+
 ### Relocating the container image
 
-If you still see `Apptainer> ` as your command prompt, enter `exit` to exit the
-running container.
+Container image files can be large, so it is best to store them where you
+normally store large software files.
 
 **HTC**
 
@@ -316,7 +332,8 @@ mv container.sif /staging/YOUR_NETID/
 If you do not have a staging directory, you can skip this step, and
 the file will be returned to your directory on the access point.
 BUT before using the container at scale, you need to first place the
-container in a staging directory.
+container in a staging directory;
+[request a staging directory here](https://chtc.cs.wisc.edu/uw-research-computing/quota-request).
 
 **HPC**
 
