@@ -73,12 +73,12 @@ to get access to one of these systems.
 Note that it can take 1-3 business days to get an account,
 assuming that your research group is already using CHTC.
 
-### Quickstart demo
+## Quickstart demo
 
 First, a quick demonstration of what a container does.
 Watch and listen to the instructor as they perform the demonstration.
 
-### Log in and setup
+## Log in and setup
 
 Log in to the system you wish to use for the container training.
 For instructions on logging in to CHTC systems, see the 
@@ -105,7 +105,7 @@ cd tutorial-containers/htc/
 cd tutorial-containers/hpc/
 ```
 
-### Submit regular job
+## Submit regular job
 
 You will use the `version.sh` script to explore the software environment
 of a regular job on your preferred system.
@@ -142,7 +142,7 @@ Once completed, examine the contents of `regular.out`.
 > Note: Because of the simplicity of the `version.sh` script, the output
 > for the HPC system will be duplicated by the number of tasks requested.
 
-### Submit container job
+## Submit container job
 
 You will now follow a similar process to submit a job that uses a container.
 For this job, you'll be using the `container` file for your system 
@@ -182,7 +182,7 @@ And
 
 * How does the output of the `container` job compare to the output of the `regular` job?
 
-### Building your own Apptainer container
+## Building your own Apptainer container
 
 Next, you'll build a simple container using Apptainer.
 
@@ -258,7 +258,7 @@ As the command runs, you'll see a variety of information printed to the screen.
 If everything works correctly, once the command completes there should be a new
 `container.sif` file in your current directory.
 
-### Testing the container
+## Testing the container
 
 While still in the interactive job (and assuming there is a `container.sif` file),
 run the following command:
@@ -314,7 +314,7 @@ exit
 
 The `Apptainer> ` prompt should disappear.
 
-### Relocating the container image
+## Relocating the container image
 
 Container image files can be large, so it is best to store them where you
 normally store large software files.
@@ -345,7 +345,7 @@ Move the `container.sif` file into your home directory:
 mv container.sif ~/
 ```
 
-### Wrap up
+## Wrap up
 
 **Remember to exit your interactive job!**
 
