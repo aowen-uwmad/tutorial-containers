@@ -6,7 +6,7 @@ This repository contains the materials for a CHTC tutorial.
 * The [HISTORY.md file](https://github.com/CHTC/tutorial-containers/blob/main/HISTORY.md) contains a list of the other versions of this material.
 
 You are currently viewing the `nov2025` branch for the training to be given on Nov. 5, 2025.
-Corresponding slides will be available soon.
+Corresponding slides are available here: [go.wisc.edu/2pixo7](https://go.wisc.edu/2pixo7).
 
 ## Files
 
