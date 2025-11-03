@@ -217,6 +217,10 @@ Bootstrap: docker
 From: python:3.13
 
 %post
+    chmod 777 /tmp
+    apt update -y
+    apt install -y nano vim
+
     python3 -m pip install cowsay
 ```
 
@@ -227,9 +231,15 @@ construct the container.
   container that is already published on DockerHub.
 
 * The lines under the `%post` section are the commands that 
-  Apptainer should use to install additional software, in this case
-  the `cowsay` package.
+  Apptainer should use to install additional software.
   (This section takes normal shell commands as instructions.)
+
+* First, install `nano` and `vim`, so we can edit files from
+  inside the container. (Because the container is based on 
+  Debian, we use the `apt` command to do this.)
+
+* Second, install the `cowsay` Python package using `pip`.
+  (`python3 -m pip` is the recommend way to use `pip` on Linux.)
 
 Now, still in the interactive job, run the following command:
 
@@ -249,7 +259,10 @@ As the command runs, you'll see a variety of information printed to the screen.
 1. First will be information about Apptainer downloading the Docker container 
    from DockerHub.
 
-2. Next, there will be the usual `pip install` output for installing the `cowsay` package,
+2. Then, the `apt` commands run, first updating its package list, then
+   installing the desired packages.
+
+3. Next, there will be the usual `pip install` output for installing the `cowsay` package,
    which comes from Apptainer executing the commands in the `%post` section.
 
 3. Finally, assuming no errors, Apptainer will create a single standalone file
@@ -263,8 +276,16 @@ If everything works correctly, once the command completes there should be a new
 While still in the interactive job (and assuming there is a `container.sif` file),
 run the following command:
 
+**HTC**
+
 ```
 apptainer shell -e container.sif
+```
+
+**HPC**
+
+```
+apptainer shell --bind $PWD/../ -e container.sif
 ```
 
 You'll see your prompt change from `[yourNetID@hostname ~]$ ` to `Apptainer> `.
@@ -304,6 +325,20 @@ You should see the following message:
                          (__)\       )\/\
                              ||----w |
                              ||     ||
+```
+
+To test that `nano` or `vim` were installed, you can run the corresponding
+command. You can also check the versions or help text; typically such 
+commands only run successfully if the program is successfully installed.
+
+```
+nano --version
+nano --help
+```
+
+```
+vim --version
+vim --help
 ```
 
 When you are done testing the container, exit the container shell by entering
@@ -375,4 +410,108 @@ software and using it in your large scale jobs.
 * CHTC Recipes GitHub: [https://github.com/CHTC/recipes](https://github.com/CHTC/recipes)
 
 See also our "Quickstart" software guides: [https://chtc.cs.wisc.edu/uw-research-computing/software-overview-htc#quickstart](https://chtc.cs.wisc.edu/uw-research-computing/software-overview-htc#quickstart)
+
+## Advanced container build
+
+The example definition file used for demonstrating how to build a container
+is somewhat minimal. What if you need to "manually" install something?
+What does that look like?
+
+Here is a definition file that demonstrates a more advanced container build.
+It's good practice to include comments for better reproducibility in the future,
+for when something needs to be changed.
+
+For more information on the parts of the definition file, see the detailed guide to Apptainer definition files:
+[https://chtc.cs.wisc.edu/uw-research-computing/apptainer-build](https://chtc.cs.wisc.edu/uw-research-computing/apptainer-build)
+
+```bash
+Bootstrap: docker
+From: python:3.13
+
+%post
+    # Debian/Ubuntu specific for installing packages
+    chmod 777 /tmp
+    export DEBIAN_FRONTEND=noninteractive
+    apt update -y
+    apt install -y \
+        git \
+        golang \
+        nano \
+        vim
+
+    python3 -m pip install requests numpy
+
+    mkdir -p /opt/
+    cd /opt
+
+    ##########################
+    # Installing "GNU Units" #
+    ##########################
+
+    # https://www.gnu.org/software/units/
+
+    # Creating a build directory for easy cleanup
+    mkdir units-build
+    cd units-build
+
+    # Downloading the source code, per instructions on their website.
+    wget -4 https://mirror.us-midwest-1.nexcess.net/gnu/units/units-2.24.tar.gz
+
+    # Extracting source code; creates directory "units-2.24"
+    tar -xzf units-2.24.tar.gz
+    cd units-2.24
+
+    # "configure, make, make install" is a common installation pattern for Linux
+    # For full instructions, you'll need to download the source code and look at the
+    #  "INSTALL" file included in it.
+
+    # Here, we specify the location ("prefix") where the final program should be installed.
+    # This step also detects if the system has the necessary dependencies to install it.
+    ./configure --prefix=/opt/units
+
+    # This compiles the program using the information from the configure step
+    make
+
+    # This copies the minimal set of files required for the program to run
+    #  over to the "prefix" location.
+    make install
+
+    # Move out of the build directory
+    cd /
+
+    # Remove the build directory to reduce size of container image
+    rm -rf /opt/units-build/
+
+    #################################
+    # Installing rclone from source #
+    #################################
+
+    # Following instructions from https://rclone.org/install/#source
+
+    # **In practice**, should instead follow the instructions for installing on Linux:
+    # https://rclone.org/install/#linux
+    # Also, you shouldn't use rclone inside of 10+ HTC jobs!!!
+    # Better to download all at once to /staging..
+
+    # Create build directory
+    mkdir -p /opt/rclone-build
+    cd /opt/rclone-build
+
+    # Download source code using git
+    git clone https://github.com/rclone/rclone.git
+    cd rclone
+
+    # Install using the go language. The first part tells it where to install
+    # the executable file.
+    GOBIN="/opt/rclone/bin" go install ./
+
+    # Clean up build directory
+    cd /
+    rm -rf /opt/rclone-build
+
+%environment
+    # This tells the launched container where to look for shell commands.
+    # Multiple locations should be provided at the same time, colon-separated.
+    export PATH=/opt/rclone/bin:/opt/units/bin:$PATH
+```
 
