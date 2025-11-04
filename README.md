@@ -441,6 +441,7 @@ From: python:3.13
 
     python3 -m pip install requests numpy
 
+    # Generally recommended to put user-installed programs into the /opt directory.
     mkdir -p /opt/
     cd /opt
 
@@ -514,4 +515,38 @@ From: python:3.13
     # Multiple locations should be provided at the same time, colon-separated.
     export PATH=/opt/rclone/bin:/opt/units/bin:$PATH
 ```
+
+Try to avoid putting *everything* into one container, unless it is required to run
+the main program. Container image files can get large, which can cause issues on 
+the HTC system. In general, you want to only put things in the container necessary
+to run the primary task of the container. 
+
+There will be a lot of output generated during the `apptainer build` step for
+the above container.
+You may find it useful to record that output to a file for easier reading if
+you encounter an error during the build. 
+You can do this, and still get the live output, using the following command:
+
+```bash
+apptainer build container.sif container.def 2>&1 | tee build.log
+```
+
+The `tee` commmand will simultaneously print the output messages and save them to
+the `build.log` file during the build.
+
+## Install MPI
+
+It is possible to install MPI in a container like any other program.
+However, whether it will be functional depends on how you try to use the container.
+
+If you are using the container to run a job **on at most 1 node at a time**, then 
+you shouldn't have any issues. Use your "normal" installation instructions in the
+definition file to install the MPI.
+
+If you are using the container to run a job **on 2 or more nodes at a time**
+(only possible on the HPC system), then the MPI needs to be configured to work with 
+our hardware! This is a lot more complicated than it sounds.
+We do have a [recipe for multi-node MPI containers](https://github.com/CHTC/recipes/tree/main/workflows-hpc/multi-node-container),
+but given the complexity, we recommend that you work with the facilitation team to
+get your software deployed.
 
